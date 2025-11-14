@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<info xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+	<id>doom</id>
+	<name>Doom</name>
+	<summary>Play Doom on NextCloud</summary>
+	<description>Allows to play Doom on NextCloud.
+
+Doom is one of the most influential games in video game history. Created by id Software, it popularized the first-person shooter (FPS) genre by placing the player in the role of a space marine fighting demons and hellish creatures inside futuristic bases on Mars</description>
+	<version>1.0.0</version>
+	<licence>agpl</licence>
+	<author mail="yvesamorim73@gmail.com" homepage="https://yvescesar.github.io/">Yves César Amorim de Azevedo</author>
+	<namespace>Doom</namespace>
+	<category>games</category>
+	<bugs>https://github.com/YvesCesar/doom_nextcloud/issues</bugs>
+	<dependencies>
+		<nextcloud min-version="30" max-version="32"/>
+	</dependencies>
+	<navigations>
+		<navigation>
+			<id>doom</id>
+			<name>Doom</name>
+			<route>doom.page.index</route>
+			<icon>app.svg</icon>
+			<type>link</type>
+		</navigation>
+	</navigations>
+</info>
