@@ -18,7 +18,7 @@ You can access the game in the specific tab in the top menu. Just press play and
 
 ## How you can support this project
 
-1. **🌟 Star this repository**: This is the easiest way to support SantaCloud and it costs nothing.
+1. **🌟 Star this repository**: This is the easiest way to support Doom Nextcloud and it costs nothing.
 2. **⭐ Rate and/or 💬 comment** on Doom Nextcloud in the [Nextcloud AppStore](https://apps.nextcloud.com/apps/doom_nextcloud)
 3. **🪲 Report bugs**: Report any bugs you find on the issue tracker.
 
