@@ -10,7 +10,7 @@ use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 
 class Application extends App implements IBootstrap {
-	public const APP_ID = 'doom';
+	public const APP_ID = 'doom_nextcloud';
 
 	/** @psalm-suppress PossiblyUnusedMethod */
 	public function __construct() {

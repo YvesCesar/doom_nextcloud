@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <info xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	  xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
-	<id>doom</id>
+	<id>doom_nextcloud</id>
 	<name>Doom</name>
 	<summary>Play Doom on NextCloud</summary>
 	<description>Allows to play Doom on NextCloud.
@@ -18,9 +18,9 @@ Doom is one of the most influential games in video game history. Created by id S
 	</dependencies>
 	<navigations>
 		<navigation>
-			<id>doom</id>
+			<id>doom_nextcloud</id>
 			<name>Doom</name>
-			<route>doom.page.index</route>
+			<route>doom_nextcloud.page.index</route>
 			<icon>app.svg</icon>
 			<type>link</type>
 		</navigation>
