@@ -1,0 +1,45 @@
+on:
+  push:
+    tags:
+      - 'v*'
+
+name: Create release and tar.gz package for it
+
+jobs:
+  create-release:
+    name: Create release and package
+    env:
+      APP_NAME: doom_nextcloud
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Create the tar.gz package
+        run: |
+          mkdir $APP_NAME
+          shopt -s extglob
+          cp -r !($APP_NAME|.git*|.|..|composer.json|package.json|.php-cs-fixer.dist.php) $APP_NAME
+          tar -zcvf $APP_NAME.tar.gz $APP_NAME
+        shell: bash
+      - name: Create the release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+      - name: Upload the package as release asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./${{ env.APP_NAME }}.tar.gz
+          asset_name: ${{ env.APP_NAME }}.tar.gz
+          asset_content_type: application/x-compressed-tar
