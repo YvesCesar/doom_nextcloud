@@ -16,19 +16,22 @@ use OCP\AppFramework\Http\ContentSecurityPolicy;
 /**
  * @psalm-suppress UnusedClass
  */
-class PageController extends Controller {
-	#[NoCSRFRequired]
-	#[NoAdminRequired]
-	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
-	#[FrontpageRoute(verb: 'GET', url: '/')]
-	public function index(): TemplateResponse {
-		$response = new TemplateResponse(
-			Application::APP_ID,
-			'index',
-		);
-		$csp = new ContentSecurityPolicy();
-		$csp->addAllowedScriptDomain('blob:');
-		$response->setContentSecurityPolicy($csp);
-		return $response;
-	}
+class PageController extends Controller
+{
+    #[NoCSRFRequired]
+    #[NoAdminRequired]
+    #[OpenAPI(OpenAPI::SCOPE_IGNORE)]
+    #[FrontpageRoute(verb: 'GET', url: '/')]
+    public function index(): TemplateResponse
+    {
+        $response = new TemplateResponse(
+            Application::APP_ID,
+            'index',
+        );
+        $csp = new ContentSecurityPolicy();
+        $csp->addAllowedScriptDomain('blob:');
+        $csp->allowEvalWasm();
+        $response->setContentSecurityPolicy($csp);
+        return $response;
+    }
 }
