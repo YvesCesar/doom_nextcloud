@@ -9,7 +9,7 @@
 		Created by id Software, it popularized the first-person shooter (FPS) genre by placing the player in the role of a space marine fighting demons and hellish creatures inside futuristic bases on Mars.
 		When enabled, you can access the game in the specific tab in the top menu. Just press play and start playing.
 	</description>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<licence>agpl</licence>
 	<author mail="yvesamorim73@gmail.com" homepage="https://yvescesar.github.io/">Yves César Amorim de Azevedo</author>
 	<namespace>Doom</namespace>
