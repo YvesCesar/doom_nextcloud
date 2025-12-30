@@ -1,6 +1,6 @@
 {
   "name": "doom_nextcloud",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "AGPL-3.0-or-later",
   "engines": {
     "node": "^22.0.0",
