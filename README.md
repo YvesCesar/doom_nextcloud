@@ -34,3 +34,7 @@ git clone https://github.com/YvesCesar/doom_nextcloud.git
 ```
 2. Enable it from the apps management inside Nextcloud
 3. Get hacking 🎉
+
+### JS-DOS
+
+This app uses [JS-DOS v8](https://github.com/caiiiycuk/js-dos) as a dependency.
