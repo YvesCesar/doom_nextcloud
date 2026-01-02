@@ -1,4 +1,4 @@
 Dos(document.getElementById("doom"), {
-    url: OC.filePath('doom_nextcloud', 'js', 'doom.jsdos'),
+    url: OC.generateUrl('/apps/doom_nextcloud/bundle/doom'),
     pathPrefix: OC.filePath('doom_nextcloud', 'js', 'emulators/'),
 });
