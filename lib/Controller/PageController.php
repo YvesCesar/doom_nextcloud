@@ -29,6 +29,7 @@ class PageController extends Controller
         $csp = new ContentSecurityPolicy();
         $csp->addAllowedScriptDomain('blob:');
         $csp->allowEvalWasm();
+        $csp->allowEvalScript();
         $response->setContentSecurityPolicy($csp);
         return $response;
     }
