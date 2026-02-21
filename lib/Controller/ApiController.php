@@ -10,6 +10,8 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\DataDisplayResponse;
+use OCP\AppFramework\Http\NotFoundResponse;
+use OCP\AppFramework\Http\StreamResponse;
 
 /**
  * @psalm-suppress UnusedClass
@@ -37,6 +39,44 @@ class ApiController extends Controller
 		);
 		$response->addHeader('Cache-Control', 'public, max-age=3600');
 		
+		return $response;
+	}
+
+	/**
+	 * Serve emulator static files (JS, WASM) via PHP to ensure correct
+	 * MIME types and compatibility with Nextcloud installations in subdirectories.
+	 *
+	 * @param string $filename
+	 * @return StreamResponse|NotFoundResponse
+	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
+	public function getEmulatorFile(string $filename): StreamResponse|NotFoundResponse
+	{
+		if (!preg_match('/^[\w\-]+\.(wasm|js|js\.map|js\.symbols)$/', $filename)) {
+			return new NotFoundResponse();
+		}
+
+		$appPath = \OC::$server->getAppManager()->getAppPath(Application::APP_ID);
+		$filePath = $appPath . '/js/emulators/' . $filename;
+
+		if (!file_exists($filePath)) {
+			return new NotFoundResponse();
+		}
+
+		$extension = pathinfo($filename, PATHINFO_EXTENSION);
+		$contentType = match ($extension) {
+			'wasm' => 'application/wasm',
+			'js'   => 'application/javascript',
+			default => 'application/octet-stream',
+		};
+
+		$response = new StreamResponse($filePath);
+		$response->setHeaders([
+			'Content-Type'  => $contentType,
+			'Cache-Control' => 'public, max-age=3600',
+		]);
+
 		return $response;
 	}
 }
