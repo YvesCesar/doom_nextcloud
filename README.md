@@ -5,7 +5,7 @@
 
 # Doom
 
-This Nextcloud app allows you to play Doom on Nextcloud. You can configure mouse sensitivity, game volume, and other options.
+This Nextcloud app allows you to play Doom in Nextcloud. You can configure mouse sensitivity, game volume, and other options.
 
 <img width="1903" height="925" alt="Screenshot From 2025-12-15 21-13-11" src="https://github.com/user-attachments/assets/d4cfd4ff-b939-45e3-8eff-ef72c745e4ee" />
 
