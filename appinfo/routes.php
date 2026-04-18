@@ -5,7 +5,7 @@ declare(strict_types=1);
 return [
 	'routes' => [
 		['name' => 'page#index', 'url' => '/', 'verb' => 'GET'],
-		['name' => 'api#getDoomBundle', 'url' => '/bundle/doom', 'verb' => 'GET'],
+		['name' => 'api#getDoomBundle', 'url' => '/bundle/doom.jsdos', 'verb' => 'GET'],
 		['name' => 'api#getEmulatorFile', 'url' => '/emulators/{filename}', 'verb' => 'GET'],
 	],
 ];
