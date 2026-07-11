@@ -5,19 +5,84 @@ declare(strict_types=1);
 namespace OCA\Doom\Controller;
 
 use OCA\Doom\AppInfo\Application;
+use OCA\Doom\Service\JsDosAccountService;
+use OCA\Doom\Service\JsDosClient;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\DataDisplayResponse;
+use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\NotFoundResponse;
 use OCP\AppFramework\Http\StreamResponse;
+use OCP\IRequest;
 
 /**
  * @psalm-suppress UnusedClass
  */
 class ApiController extends Controller
 {
+	public function __construct(
+		string $appName,
+		IRequest $request,
+		private ?string $userId,
+		private JsDosAccountService $accountService,
+		private JsDosClient $jsDosClient,
+	) {
+		parent::__construct($appName, $request);
+	}
+
+	/**
+	 * Return the stored js-dos account for the current user (null if none).
+	 */
+	#[NoAdminRequired]
+	public function getState(): DataResponse
+	{
+		if ($this->userId === null) {
+			return new DataResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
+		return new DataResponse([
+			'account' => $this->accountService->get($this->userId),
+		]);
+	}
+
+	/**
+	 * Validate a js-dos key server-side (self-hosted emulators cannot, due to
+	 * CORS), then store and return the resolved account.
+	 */
+	#[NoAdminRequired]
+	public function setKey(string $key = ''): DataResponse
+	{
+		if ($this->userId === null) {
+			return new DataResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
+		$account = $this->jsDosClient->resolveAccount($key);
+		if ($account === null) {
+			return new DataResponse(['status' => 'invalid'], Http::STATUS_UNPROCESSABLE_ENTITY);
+		}
+
+		$this->accountService->set($this->userId, $account);
+
+		return new DataResponse(['account' => $account]);
+	}
+
+	/**
+	 * Delete the stored js-dos account for the current user.
+	 */
+	#[NoAdminRequired]
+	public function deleteState(): DataResponse
+	{
+		if ($this->userId === null) {
+			return new DataResponse([], Http::STATUS_UNAUTHORIZED);
+		}
+
+		$this->accountService->delete($this->userId);
+
+		return new DataResponse(['status' => 'ok']);
+	}
+
 	/**
 	 * Serve the doom.jsdos bundle file
 	 *

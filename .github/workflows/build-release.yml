@@ -20,7 +20,7 @@ jobs:
         run: |
           mkdir $APP_NAME
           shopt -s extglob
-          cp -r !($APP_NAME|.git*|.|..|composer.json|package.json|.php-cs-fixer.dist.php) $APP_NAME
+          cp -r !($APP_NAME|.git*|.|..|composer.json|package.json|.php-cs-fixer.dist.php|tests) $APP_NAME
           tar -zcvf $APP_NAME.tar.gz $APP_NAME
         shell: bash
       - name: Create the release
