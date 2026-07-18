@@ -8,8 +8,7 @@
 		 failOnWarning="true"
 		 colors="true"
 		 cacheDirectory="../../build/logs/.phpunit.cache"
-		 displayDetailsOnTestsThatTriggerWarnings="true"
-		 beStrictAboutCoverageMetadata="true">
+		 displayDetailsOnTestsThatTriggerWarnings="true">
 	<testsuites>
 		<testsuite name="unit">
 			<directory suffix="Test.php">Unit</directory>

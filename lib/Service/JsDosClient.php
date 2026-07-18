@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace OCA\Doom\Service;
 
 use OCP\Http\Client\IClientService;
+use Psr\Log\LoggerInterface;
 use Throwable;
 
 /**
@@ -21,12 +22,14 @@ class JsDosClient {
 
 	public function __construct(
 		private IClientService $clientService,
+		private LoggerInterface $logger,
 	) {
 	}
 
 	/**
 	 * @return array<string, mixed>|null the account, or null if the key is
 	 *                                   malformed or not tied to an account
+	 * @throws JsDosUnavailableException if the js-dos API cannot be reached
 	 */
 	public function resolveAccount(string $key): ?array {
 		if (!preg_match('/^[a-z]{5}$/', $key)) {
@@ -37,7 +40,8 @@ class JsDosClient {
 			$response = $this->clientService->newClient()->get(self::TOKEN_URL . $key);
 			$account = json_decode((string)$response->getBody(), true);
 		} catch (Throwable $e) {
-			return null;
+			$this->logger->error('Could not reach the js-dos API to validate a key', ['exception' => $e]);
+			throw new JsDosUnavailableException('js-dos API unreachable', 0, $e);
 		}
 
 		if (!is_array($account)

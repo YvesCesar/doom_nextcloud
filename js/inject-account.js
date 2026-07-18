@@ -8,8 +8,11 @@
         var account = OCP.InitialState.loadState('doom_nextcloud', 'account')
         if (account && account.email) {
             localStorage.setItem('jsdos.8.cached.jsdos.account', JSON.stringify(account))
+        } else {
+            // Key was removed on the server: clear the cached sign-in too.
+            localStorage.removeItem('jsdos.8.cached.jsdos.account')
         }
     } catch (e) {
-        // No account or initial state: js-dos simply starts logged out.
+        // No initial state: leave localStorage untouched.
     }
 })()

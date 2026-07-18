@@ -5,15 +5,18 @@ declare(strict_types=1);
 namespace OCA\Doom\Tests\Unit\Service;
 
 use OCA\Doom\Service\JsDosClient;
+use OCA\Doom\Service\JsDosUnavailableException;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
 use OCP\Http\Client\IResponse;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 class JsDosClientTest extends TestCase {
 	private IClientService&MockObject $clientService;
 	private IClient&MockObject $client;
+	private LoggerInterface&MockObject $logger;
 	private JsDosClient $jsDosClient;
 
 	protected function setUp(): void {
@@ -21,7 +24,8 @@ class JsDosClientTest extends TestCase {
 		$this->clientService = $this->createMock(IClientService::class);
 		$this->client = $this->createMock(IClient::class);
 		$this->clientService->method('newClient')->willReturn($this->client);
-		$this->jsDosClient = new JsDosClient($this->clientService);
+		$this->logger = $this->createMock(LoggerInterface::class);
+		$this->jsDosClient = new JsDosClient($this->clientService, $this->logger);
 	}
 
 	private function response(string $body): IResponse&MockObject {
@@ -63,9 +67,11 @@ class JsDosClientTest extends TestCase {
 		$this->assertNull($this->jsDosClient->resolveAccount('abcde'));
 	}
 
-	public function testResolveAccountReturnsNullOnHttpError(): void {
+	public function testResolveAccountThrowsAndLogsOnHttpError(): void {
 		$this->client->method('get')->willThrowException(new \RuntimeException('network'));
+		$this->logger->expects($this->once())->method('error');
 
-		$this->assertNull($this->jsDosClient->resolveAccount('abcde'));
+		$this->expectException(JsDosUnavailableException::class);
+		$this->jsDosClient->resolveAccount('abcde');
 	}
 }

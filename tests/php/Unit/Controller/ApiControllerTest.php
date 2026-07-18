@@ -7,6 +7,7 @@ namespace OCA\Doom\Tests\Unit\Controller;
 use OCA\Doom\Controller\ApiController;
 use OCA\Doom\Service\JsDosAccountService;
 use OCA\Doom\Service\JsDosClient;
+use OCA\Doom\Service\JsDosUnavailableException;
 use OCP\AppFramework\Http;
 use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -34,16 +35,6 @@ class ApiControllerTest extends TestCase {
 		);
 	}
 
-	public function testGetStateReturnsStoredAccount(): void {
-		$account = ['email' => 'a@b.c', 'token' => 'abcde'];
-		$this->accountService->method('get')->with(self::USER_ID)->willReturn($account);
-
-		$response = $this->controller->getState();
-
-		$this->assertSame(Http::STATUS_OK, $response->getStatus());
-		$this->assertSame(['account' => $account], $response->getData());
-	}
-
 	public function testSetKeyValidatesStoresAndReturnsAccount(): void {
 		$account = ['email' => 'a@b.c', 'token' => 'abcde', 'premium' => false];
 		$this->jsDosClient->method('resolveAccount')->with('abcde')->willReturn($account);
@@ -66,6 +57,16 @@ class ApiControllerTest extends TestCase {
 		$this->assertSame(Http::STATUS_UNPROCESSABLE_ENTITY, $response->getStatus());
 	}
 
+	public function testSetKeyReturnsServiceUnavailableWhenJsDosUnreachable(): void {
+		$this->jsDosClient->method('resolveAccount')
+			->willThrowException(new JsDosUnavailableException());
+		$this->accountService->expects($this->never())->method('set');
+
+		$response = $this->controller->setKey('abcde');
+
+		$this->assertSame(Http::STATUS_SERVICE_UNAVAILABLE, $response->getStatus());
+	}
+
 	public function testDeleteStateDeletes(): void {
 		$this->accountService->expects($this->once())
 			->method('delete')
@@ -77,11 +78,11 @@ class ApiControllerTest extends TestCase {
 		$this->assertSame(['status' => 'ok'], $response->getData());
 	}
 
-	public function testGetStateReturnsUnauthorizedWithoutUser(): void {
+	public function testSetKeyReturnsUnauthorizedWithoutUser(): void {
 		$controller = new ApiController('doom_nextcloud', $this->request, null, $this->accountService, $this->jsDosClient);
-		$this->accountService->expects($this->never())->method('get');
+		$this->jsDosClient->expects($this->never())->method('resolveAccount');
 
-		$response = $controller->getState();
+		$response = $controller->setKey('abcde');
 
 		$this->assertSame(Http::STATUS_UNAUTHORIZED, $response->getStatus());
 	}

@@ -76,6 +76,8 @@
             }
             if (response.status === 422) {
                 setStatus(t(APP_ID, 'Invalid key.'), false)
+            } else if (response.status === 503) {
+                setStatus(t(APP_ID, 'Could not reach js-dos. Please try again later.'), false)
             } else {
                 setStatus(t(APP_ID, 'Could not save the key.'), false)
             }

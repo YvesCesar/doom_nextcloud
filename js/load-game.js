@@ -6,10 +6,6 @@
 
     var banner = document.getElementById('doom-key-banner')
     if (banner) {
-        var settingsLink = document.getElementById('doom-key-banner-settings')
-        if (settingsLink) {
-            settingsLink.href = OC.generateUrl('/settings/user/' + APP_ID)
-        }
         var dismissed = false
         try {
             dismissed = localStorage.getItem(BANNER_DISMISS_KEY) === '1'

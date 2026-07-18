@@ -7,10 +7,12 @@ namespace OCA\Doom\Controller;
 use OCA\Doom\AppInfo\Application;
 use OCA\Doom\Service\JsDosAccountService;
 use OCA\Doom\Service\JsDosClient;
+use OCA\Doom\Service\JsDosUnavailableException;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
+use OCP\AppFramework\Http\Attribute\UserRateLimit;
 use OCP\AppFramework\Http\DataDisplayResponse;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\NotFoundResponse;
@@ -33,32 +35,22 @@ class ApiController extends Controller
 	}
 
 	/**
-	 * Return the stored js-dos account for the current user (null if none).
-	 */
-	#[NoAdminRequired]
-	public function getState(): DataResponse
-	{
-		if ($this->userId === null) {
-			return new DataResponse([], Http::STATUS_UNAUTHORIZED);
-		}
-
-		return new DataResponse([
-			'account' => $this->accountService->get($this->userId),
-		]);
-	}
-
-	/**
 	 * Validate a js-dos key server-side (self-hosted emulators cannot, due to
 	 * CORS), then store and return the resolved account.
 	 */
 	#[NoAdminRequired]
+	#[UserRateLimit(limit: 5, period: 60)]
 	public function setKey(string $key = ''): DataResponse
 	{
 		if ($this->userId === null) {
 			return new DataResponse([], Http::STATUS_UNAUTHORIZED);
 		}
 
-		$account = $this->jsDosClient->resolveAccount($key);
+		try {
+			$account = $this->jsDosClient->resolveAccount($key);
+		} catch (JsDosUnavailableException) {
+			return new DataResponse(['status' => 'unavailable'], Http::STATUS_SERVICE_UNAVAILABLE);
+		}
 		if ($account === null) {
 			return new DataResponse(['status' => 'invalid'], Http::STATUS_UNPROCESSABLE_ENTITY);
 		}
