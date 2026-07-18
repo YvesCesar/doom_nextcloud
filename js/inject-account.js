@@ -13,6 +13,7 @@
             localStorage.removeItem('jsdos.8.cached.jsdos.account')
         }
     } catch (e) {
-        // No initial state: leave localStorage untouched.
+        // Missing or invalid state must never preserve another user's account.
+        localStorage.removeItem('jsdos.8.cached.jsdos.account')
     }
 })()

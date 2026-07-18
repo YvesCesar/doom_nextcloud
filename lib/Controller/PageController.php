@@ -40,7 +40,7 @@ class PageController extends Controller
 		// Expose the stored account so it can be written to localStorage before
 		// js-dos boots (js-dos reads its account at script-eval time).
 		$account = $this->userId !== null ? $this->accountService->get($this->userId) : null;
-		$this->initialState->provideInitialState('account', $account);
+		$this->initialState->provideInitialState('account', $account ?? []);
 
 		$response = new TemplateResponse(
 			Application::APP_ID,

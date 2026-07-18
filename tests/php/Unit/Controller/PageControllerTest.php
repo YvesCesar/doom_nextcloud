@@ -56,15 +56,35 @@ class PageControllerTest extends TestCase {
 		$this->assertSame(self::SETTINGS_URL, $response->getParams()['settingsUrl']);
 	}
 
-	public function testIndexProvidesNullWhenNoUser(): void {
+	public function testIndexProvidesEmptyAccountWhenNoUser(): void {
 		$this->accountService->expects($this->never())->method('get');
 		$this->initialState->expects($this->once())
 			->method('provideInitialState')
-			->with('account', null);
+			->with('account', []);
 		$controller = new PageController(
 			'doom_nextcloud',
 			$this->request,
 			null,
+			$this->accountService,
+			$this->initialState,
+			$this->urlGenerator,
+		);
+
+		$controller->index();
+	}
+
+	public function testIndexProvidesEmptyAccountWhenUserHasNoStoredAccount(): void {
+		$this->accountService->expects($this->once())
+			->method('get')
+			->with(self::USER_ID)
+			->willReturn(null);
+		$this->initialState->expects($this->once())
+			->method('provideInitialState')
+			->with('account', []);
+		$controller = new PageController(
+			'doom_nextcloud',
+			$this->request,
+			self::USER_ID,
 			$this->accountService,
 			$this->initialState,
 			$this->urlGenerator,
