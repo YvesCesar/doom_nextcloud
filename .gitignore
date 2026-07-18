@@ -6,5 +6,6 @@
 
 /.php-cs-fixer.cache
 /tests/.phpunit.cache
+/build/
 
 /node_modules/

@@ -1,8 +1,6 @@
 {
 	"name": "nextcloud/doom_nextcloud",
-	"description": "Allows to play Doom on NextCloud.
-
-Doom is one of the most influential games in video game history. Created by id Software, it popularized the first-person shooter (FPS) genre by placing the player in the role of a space marine fighting demons and hellish creatures inside futuristic bases on Mars",
+	"description": "Allows to play Doom on NextCloud. Doom is one of the most influential games in video game history. Created by id Software, it popularized the first-person shooter (FPS) genre by placing the player in the role of a space marine fighting demons and hellish creatures inside futuristic bases on Mars",
 	"license": "AGPL-3.0-or-later",
 	"authors": [
 		{
@@ -27,7 +25,8 @@ Doom is one of the most influential games in video game history. Created by id S
 		"cs:check": "php-cs-fixer fix --dry-run --diff",
 		"cs:fix": "php-cs-fixer fix",
 		"psalm": "psalm --threads=1 --no-cache",
-		"test:unit": "phpunit tests -c tests/phpunit.xml --colors=always --fail-on-warning --fail-on-risky",
+		"test:unit": "vendor/bin/phpunit -c tests/php/phpunit.xml --no-coverage --colors=always --fail-on-warning --fail-on-risky",
+		"test:coverage": "XDEBUG_MODE=coverage vendor/bin/phpunit -c tests/php/phpunit.xml",
 		"openapi": "generate-spec",
 		"rector": "rector && composer cs:fix"
 	},
@@ -37,6 +36,7 @@ Doom is one of the most influential games in video game history. Created by id S
 	},
 	"require-dev": {
 		"nextcloud/ocp": "dev-stable30",
+		"phpunit/phpunit": "^10.5",
 		"roave/security-advisories": "dev-latest"
 	},
 	"config": {

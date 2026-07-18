@@ -20,6 +20,10 @@
 	<dependencies>
 		<nextcloud min-version="30" max-version="33"/>
 	</dependencies>
+	<settings>
+		<personal>OCA\Doom\Settings\PersonalSettings</personal>
+		<personal-section>OCA\Doom\Settings\PersonalSection</personal-section>
+	</settings>
 	<navigations>
 		<navigation>
 			<id>doom_nextcloud</id>

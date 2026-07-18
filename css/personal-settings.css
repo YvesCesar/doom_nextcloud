@@ -1,0 +1,25 @@
+#doom-personal-settings .doom-key-identity {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin: 0;
+}
+
+#doom-personal-settings .doom-key-check {
+	color: var(--color-success);
+	font-size: 1.2em;
+}
+
+#doom-personal-settings .doom-key-actions {
+	display: flex;
+	gap: 8px;
+	margin-top: 12px;
+	flex-wrap: wrap;
+}
+
+#doom-personal-settings .doom-key-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-wrap: wrap;
+}
