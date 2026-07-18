@@ -3,11 +3,11 @@
 	  xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
 	<id>doom_nextcloud</id>
 	<name>Doom</name>
-	<summary>Play Doom on NextCloud</summary>
+	<summary>Play Doom directly in Nextcloud</summary>
 	<description>
-		Allows to play Doom on NextCloud. Doom is one of the most influential games in video game history.  
-		Created by id Software, it popularized the first-person shooter (FPS) genre by placing the player in the role of a space marine fighting demons and hellish creatures inside futuristic bases on Mars.
-		When enabled, you can access the game in the specific tab in the top menu. Just press play and start playing.
+		Play the classic Doom game without leaving Nextcloud. Open Doom from the top menu, press play, and face demons in the futuristic bases of Mars.
+
+		Adjust the mouse sensitivity, sound, and other game options to suit you. If you use a js-dos account, save your key in your personal Doom settings to stay signed in across browsers and devices. Your account information is stored securely and can be removed at any time.
 	</description>
 	<version>1.0.8</version>
 	<licence>agpl</licence>
