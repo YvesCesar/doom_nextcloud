@@ -48,4 +48,4 @@ git clone https://github.com/YvesCesar/doom_nextcloud.git
 
 ### JS-DOS
 
-This app uses [JS-DOS v8](https://github.com/caiiiycuk/js-dos) as a dependency.
+The Doom bundle runs on [js-dos](https://github.com/caiiiycuk/js-dos), the open-source project that allows you to run DOS games in a web browser. I’d like to thank its creator and all the contributors whose work made this application possible.
