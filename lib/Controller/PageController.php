@@ -43,6 +43,7 @@ class PageController extends Controller
         $response = new TemplateResponse(
             Application::APP_ID,
             'index',
+            ['email' => $account['email'] ?? null],
         );
         $csp = new ContentSecurityPolicy();
         $csp->addAllowedScriptDomain('blob:');

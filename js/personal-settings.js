@@ -5,6 +5,8 @@
     var KEY_URL = OC.generateUrl('/apps/' + APP_ID + '/jsdos-key')
     var STATE_URL = OC.generateUrl('/apps/' + APP_ID + '/jsdos-state')
 
+    var currentEmail = null
+
     function el(id) {
         return document.getElementById(id)
     }
@@ -27,8 +29,31 @@
         }
     }
 
-    function signedIn(email) {
-        setStatus(t(APP_ID, 'Signed in as {email}', { email: email }), true)
+    function showSignedIn(email) {
+        currentEmail = email || currentEmail
+        var emailEl = el('doom-key-email')
+        if (emailEl) {
+            emailEl.textContent = currentEmail || ''
+        }
+        el('doom-key-signed-in').style.display = ''
+        el('doom-key-form').style.display = 'none'
+        var input = el('doom-key-input')
+        if (input) {
+            input.value = ''
+        }
+    }
+
+    function showForm() {
+        el('doom-key-signed-in').style.display = 'none'
+        el('doom-key-form').style.display = ''
+        var cancel = el('doom-key-cancel')
+        if (cancel) {
+            cancel.style.display = currentEmail ? '' : 'none'
+        }
+        var input = el('doom-key-input')
+        if (input) {
+            input.focus()
+        }
     }
 
     function save() {
@@ -45,8 +70,8 @@
         }).then(function (response) {
             if (response.ok) {
                 return response.json().then(function (data) {
-                    input.value = ''
-                    signedIn(data.account && data.account.email)
+                    showSignedIn(data.account && data.account.email)
+                    setStatus(t(APP_ID, 'Key validated and saved.'), true)
                 })
             }
             if (response.status === 422) {
@@ -62,18 +87,26 @@
     function forget() {
         fetch(STATE_URL, { method: 'DELETE', headers: headers() })
             .then(function (response) {
-                setStatus(
-                    response.ok ? t(APP_ID, 'Key removed.') : t(APP_ID, 'Could not remove the key.'),
-                    response.ok
-                )
+                if (response.ok) {
+                    currentEmail = null
+                    showForm()
+                    setStatus(t(APP_ID, 'Key removed.'), true)
+                } else {
+                    setStatus(t(APP_ID, 'Could not remove the key.'), false)
+                }
             }).catch(function () {
                 setStatus(t(APP_ID, 'Could not remove the key.'), false)
             })
     }
 
     function init() {
+        var signedInBlock = el('doom-key-signed-in')
+        currentEmail = (signedInBlock && signedInBlock.getAttribute('data-email')) || null
+
         var saveButton = el('doom-key-save')
         var forgetButton = el('doom-key-forget')
+        var changeButton = el('doom-key-change')
+        var cancelButton = el('doom-key-cancel')
         var input = el('doom-key-input')
         if (saveButton) {
             saveButton.addEventListener('click', save)
@@ -81,17 +114,24 @@
         if (forgetButton) {
             forgetButton.addEventListener('click', forget)
         }
+        if (changeButton) {
+            changeButton.addEventListener('click', function () {
+                setStatus('', true)
+                showForm()
+            })
+        }
+        if (cancelButton) {
+            cancelButton.addEventListener('click', function () {
+                setStatus('', true)
+                showSignedIn(currentEmail)
+            })
+        }
         if (input) {
             input.addEventListener('keydown', function (event) {
                 if (event.key === 'Enter') {
                     save()
                 }
             })
-        }
-        var status = el('doom-key-status')
-        var email = status && status.getAttribute('data-email')
-        if (email) {
-            signedIn(email)
         }
     }
 

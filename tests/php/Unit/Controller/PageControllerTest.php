@@ -44,6 +44,7 @@ class PageControllerTest extends TestCase {
 
 		$this->assertInstanceOf(TemplateResponse::class, $response);
 		$this->assertSame('index', $response->getTemplateName());
+		$this->assertSame('a@b.c', $response->getParams()['email']);
 	}
 
 	public function testIndexProvidesNullWhenNoUser(): void {
