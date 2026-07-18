@@ -1,0 +1,109 @@
+# Adapted from the Nextcloud app workflow used by LibreSign.
+# https://github.com/LibreSign/libresign/blob/main/.github/workflows/phpunit-sqlite.yml
+#
+# SPDX-FileCopyrightText: 2026 Yves César Amorim de Azevedo
+# SPDX-License-Identifier: MIT
+
+name: PHPUnit
+
+on:
+  pull_request:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: phpunit-${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.versions.outputs.sparse-matrix }}
+
+    steps:
+      - name: Checkout app
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Get supported Nextcloud and PHP versions
+        id: versions
+        uses: icewind1991/nextcloud-version-matrix@8a7bac6300b2f0f3100088b297995a229558ddba # v1.3.2.3.1.3.2
+
+  phpunit:
+    runs-on: ubuntu-latest
+    needs: matrix
+
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.matrix.outputs.matrix) }}
+
+    name: PHP ${{ matrix.php-versions }} Nextcloud ${{ matrix.server-versions }}
+
+    steps:
+      - name: Checkout Nextcloud
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+          repository: nextcloud/server
+          ref: ${{ matrix.server-versions }}
+          submodules: true
+
+      - name: Checkout app
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+          path: apps/doom_nextcloud
+
+      - name: Set up PHP ${{ matrix.php-versions }}
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: bz2, ctype, curl, dom, fileinfo, gd, iconv, intl, json, libxml, mbstring, openssl, pcntl, posix, session, simplexml, sqlite, pdo_sqlite, xmlreader, xmlwriter, zip, zlib
+          coverage: none
+          ini-file: development
+          ini-values: disable_functions=
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install app dependencies
+        working-directory: apps/doom_nextcloud
+        run: |
+          composer remove nextcloud/ocp --dev --no-update --no-interaction
+          composer install --no-interaction --prefer-dist --no-progress --no-scripts
+
+      - name: Install Nextcloud
+        run: |
+          mkdir data
+          ./occ maintenance:install \
+            --verbose \
+            --database=sqlite \
+            --database-name=nextcloud \
+            --admin-user=admin \
+            --admin-pass=admin
+          ./occ app:enable --force doom_nextcloud
+          ./occ --version
+
+      - name: Run unit tests
+        working-directory: apps/doom_nextcloud
+        run: composer run test:unit
+
+      - name: Print Nextcloud log
+        if: always()
+        run: test ! -f data/nextcloud.log || cat data/nextcloud.log
+
+  summary:
+    runs-on: ubuntu-latest
+    needs: phpunit
+    if: always()
+    permissions:
+      contents: none
+    name: phpunit-summary
+
+    steps:
+      - name: Verify PHPUnit matrix result
+        run: if [ "${{ needs.phpunit.result }}" != "success" ]; then exit 1; fi
