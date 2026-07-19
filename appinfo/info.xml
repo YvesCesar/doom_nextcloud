@@ -18,7 +18,7 @@
 	<repository type="git">https://github.com/YvesCesar/doom_nextcloud</repository>
 	<screenshot>https://github.com/user-attachments/assets/d4cfd4ff-b939-45e3-8eff-ef72c745e4ee</screenshot>
 	<dependencies>
-		<nextcloud min-version="30" max-version="33"/>
+		<nextcloud min-version="30" max-version="34"/>
 	</dependencies>
 	<navigations>
 		<navigation>

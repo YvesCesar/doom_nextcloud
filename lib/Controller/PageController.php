@@ -30,7 +30,6 @@ class PageController extends Controller
         $csp->addAllowedScriptDomain('blob:');
         $csp->addAllowedWorkerSrcDomain('blob:');
         $csp->allowEvalWasm();
-        $csp->allowEvalScript();
         $response->setContentSecurityPolicy($csp);
         return $response;
     }

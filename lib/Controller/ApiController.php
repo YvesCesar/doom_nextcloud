@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace OCA\Doom\Controller;
 
 use OCA\Doom\AppInfo\Application;
+use OCP\App\IAppManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
@@ -12,12 +13,21 @@ use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\DataDisplayResponse;
 use OCP\AppFramework\Http\NotFoundResponse;
 use OCP\AppFramework\Http\StreamResponse;
+use OCP\IRequest;
 
 /**
  * @psalm-suppress UnusedClass
  */
 class ApiController extends Controller
 {
+	public function __construct(
+		string $appName,
+		IRequest $request,
+		private IAppManager $appManager,
+	) {
+		parent::__construct($appName, $request);
+	}
+
 	/**
 	 * Serve the doom.jsdos bundle file
 	 *
@@ -27,7 +37,7 @@ class ApiController extends Controller
 	#[NoCSRFRequired]
 	public function getDoomBundle(): DataDisplayResponse
 	{
-		$appPath = \OC::$server->getAppManager()->getAppPath(Application::APP_ID);
+		$appPath = $this->appManager->getAppPath(Application::APP_ID);
 		$bundlePath = $appPath . '/js/doom.jsdos';
 		
 		$data = file_get_contents($bundlePath);
@@ -57,7 +67,7 @@ class ApiController extends Controller
 			return new NotFoundResponse();
 		}
 
-		$appPath = \OC::$server->getAppManager()->getAppPath(Application::APP_ID);
+		$appPath = $this->appManager->getAppPath(Application::APP_ID);
 		$filePath = $appPath . '/js/emulators/' . $filename;
 
 		if (!file_exists($filePath)) {
