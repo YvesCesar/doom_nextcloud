@@ -5,16 +5,27 @@
 
 # Doom
 
-This Nextcloud app allows you to play Doom in Nextcloud. You can configure mouse sensitivity, game volume, and other options.
+Play the classic Doom game without leaving Nextcloud. Open the app, press play, and adjust the mouse sensitivity, sound, and other game options to suit you.
+
+If you use a js-dos account, you can save your key once and stay signed in when you play from another browser or device.
 
 <img width="1903" height="925" alt="Screenshot From 2025-12-15 21-13-11" src="https://github.com/user-attachments/assets/d4cfd4ff-b939-45e3-8eff-ef72c745e4ee" />
 
-## Usage
+## Get started
 
-- It is recommended to download or install this app directly from the [Nextcloud App store](https://apps.nextcloud.com/apps/doom_nextcloud).
-- Alternatively you can download the [latest Doom Nextcloud release](https://github.com/YvesCesar/doom_nextcloud/releases) based on this repository.
+1. Install the app from the [Nextcloud App Store](https://apps.nextcloud.com/apps/doom_nextcloud). You can also use the [latest release from GitHub](https://github.com/YvesCesar/doom_nextcloud/releases).
+2. Open **Doom** from the top menu in Nextcloud.
+3. Press play and enjoy the game.
 
-You can access the game in the specific tab in the top menu. Just press play and start playing.
+## Stay signed in to js-dos
+
+This step is optional. If you have a js-dos account, saving its key means you do not need to enter it again in each browser or device.
+
+1. Open your **Personal settings** in Nextcloud.
+2. Select **Doom**.
+3. Enter your js-dos key and select **Save**.
+
+The app checks the key with js-dos and stores your account information securely. You can replace or remove the key at any time from the same settings page.
 
 ## How you can support this project
 
@@ -37,4 +48,4 @@ git clone https://github.com/YvesCesar/doom_nextcloud.git
 
 ### JS-DOS
 
-This app uses [JS-DOS v8](https://github.com/caiiiycuk/js-dos) as a dependency.
+The Doom bundle runs on [js-dos](https://github.com/caiiiycuk/js-dos), the open-source project that allows you to run DOS games in a web browser. I’d like to thank its creator and all the contributors whose work made this application possible.
