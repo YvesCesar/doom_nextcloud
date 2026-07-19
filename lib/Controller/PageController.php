@@ -28,6 +28,7 @@ class PageController extends Controller
         );
         $csp = new ContentSecurityPolicy();
         $csp->addAllowedScriptDomain('blob:');
+        $csp->addAllowedScriptDomain("'unsafe-eval'");
         $csp->addAllowedWorkerSrcDomain('blob:');
         $csp->allowEvalWasm();
         $response->setContentSecurityPolicy($csp);
