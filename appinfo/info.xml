@@ -9,7 +9,7 @@
 
 		Adjust the mouse sensitivity, sound, and other game options to suit you. If you use a js-dos account, save your key in your personal Doom settings to stay signed in across browsers and devices. Your account information is stored securely and can be removed at any time.
 	</description>
-	<version>1.0.9</version>
+	<version>2.0.0</version>
 	<licence>agpl</licence>
 	<author mail="yvesamorim73@gmail.com" homepage="https://yvescesar.github.io/">Yves César Amorim de Azevedo</author>
 	<namespace>Doom</namespace>
