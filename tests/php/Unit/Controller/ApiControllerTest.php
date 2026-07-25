@@ -8,6 +8,7 @@ use OCA\Doom\Controller\ApiController;
 use OCA\Doom\Service\JsDosAccountService;
 use OCA\Doom\Service\JsDosClient;
 use OCA\Doom\Service\JsDosUnavailableException;
+use OCP\App\IAppManager;
 use OCP\AppFramework\Http;
 use OCP\IRequest;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -19,6 +20,7 @@ class ApiControllerTest extends TestCase {
 	private IRequest&MockObject $request;
 	private JsDosAccountService&MockObject $accountService;
 	private JsDosClient&MockObject $jsDosClient;
+	private IAppManager&MockObject $appManager;
 	private ApiController $controller;
 
 	protected function setUp(): void {
@@ -26,12 +28,14 @@ class ApiControllerTest extends TestCase {
 		$this->request = $this->createMock(IRequest::class);
 		$this->accountService = $this->createMock(JsDosAccountService::class);
 		$this->jsDosClient = $this->createMock(JsDosClient::class);
+		$this->appManager = $this->createMock(IAppManager::class);
 		$this->controller = new ApiController(
 			'doom_nextcloud',
 			$this->request,
 			self::USER_ID,
 			$this->accountService,
 			$this->jsDosClient,
+			$this->appManager,
 		);
 	}
 
@@ -79,7 +83,7 @@ class ApiControllerTest extends TestCase {
 	}
 
 	public function testSetKeyReturnsUnauthorizedWithoutUser(): void {
-		$controller = new ApiController('doom_nextcloud', $this->request, null, $this->accountService, $this->jsDosClient);
+		$controller = new ApiController('doom_nextcloud', $this->request, null, $this->accountService, $this->jsDosClient, $this->appManager);
 		$this->jsDosClient->expects($this->never())->method('resolveAccount');
 
 		$response = $controller->setKey('abcde');

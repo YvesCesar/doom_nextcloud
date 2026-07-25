@@ -55,9 +55,9 @@ class PageController extends Controller
 		);
 		$csp = new ContentSecurityPolicy();
 		$csp->addAllowedScriptDomain('blob:');
+		$csp->addAllowedScriptDomain("'unsafe-eval'");
 		$csp->addAllowedWorkerSrcDomain('blob:');
 		$csp->allowEvalWasm();
-		$csp->allowEvalScript();
 		$response->setContentSecurityPolicy($csp);
 		return $response;
 	}

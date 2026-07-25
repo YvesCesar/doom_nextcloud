@@ -8,6 +8,7 @@ use OCA\Doom\AppInfo\Application;
 use OCA\Doom\Service\JsDosAccountService;
 use OCA\Doom\Service\JsDosClient;
 use OCA\Doom\Service\JsDosUnavailableException;
+use OCP\App\IAppManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
@@ -30,6 +31,7 @@ class ApiController extends Controller
 		private ?string $userId,
 		private JsDosAccountService $accountService,
 		private JsDosClient $jsDosClient,
+		private IAppManager $appManager,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -84,18 +86,18 @@ class ApiController extends Controller
 	#[NoCSRFRequired]
 	public function getDoomBundle(): DataDisplayResponse
 	{
-		$appPath = \OC::$server->getAppManager()->getAppPath(Application::APP_ID);
+		$appPath = $this->appManager->getAppPath(Application::APP_ID);
 		$bundlePath = $appPath . '/js/doom.jsdos';
-		
+
 		$data = file_get_contents($bundlePath);
-		
+
 		$response = new DataDisplayResponse(
 			$data,
 			Http::STATUS_OK,
 			['Content-Type' => 'application/octet-stream']
 		);
 		$response->addHeader('Cache-Control', 'public, max-age=3600');
-		
+
 		return $response;
 	}
 
@@ -114,7 +116,7 @@ class ApiController extends Controller
 			return new NotFoundResponse();
 		}
 
-		$appPath = \OC::$server->getAppManager()->getAppPath(Application::APP_ID);
+		$appPath = $this->appManager->getAppPath(Application::APP_ID);
 		$filePath = $appPath . '/js/emulators/' . $filename;
 
 		if (!file_exists($filePath)) {
